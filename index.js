@@ -1,7 +1,7 @@
 
 const bluebird = require('bluebird');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/weggejorist');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/weggejorist');
 mongoose.Promise = bluebird.Promise;
 
 const DumpertVideo = require('./DumpertVideo');
