@@ -36,14 +36,14 @@ function getLatest() {
             });
 
         })
-        .then(() => console.log('done!'));
 }
 
 function refresh() {
     getLatest()
-        .then(() => DumpertVideo.find())
+        .then(() => console.log('> Checked and inserterd the latest 25 video\'s'))
+        .then(() => DumpertVideo.find().sort({published: -1}).select('_id videoId secret').limit(60).exec())
         .then(videos => bluebird.map(videos, video => video.refreshComments()))
-        .then(() => console.log('REFRESHED!'))
+        .then(() => console.log('> Checked and updated all comments of the latest 60 video\'s'))
         .then(() => setTimeout(refresh, 1000 * 60));
 }
 

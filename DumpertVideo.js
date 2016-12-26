@@ -18,8 +18,6 @@ DumpertVideo.methods.refreshComments = function() {
 
     const url = `https://comments.dumpert.nl/embed/${this.videoId}/${this.secret}/comments/`;
 
-    console.log('START XRAY!', url);
-
     const xrayPromise = new Promise((resolve, reject) => {
         xray(url, '.comment', [{
             id: '@data-commentid',
