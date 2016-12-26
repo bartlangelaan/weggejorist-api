@@ -36,8 +36,6 @@ DumpertVideo.methods.refreshComments = function() {
 
         return bluebird.map(data, comment => {
 
-            console.log(comment);
-
             const date = {
                 year: comment.date.split(' | ')[0].split('-')[2],
                 month: comment.date.split(' | ')[0].split('-')[1],
@@ -45,14 +43,41 @@ DumpertVideo.methods.refreshComments = function() {
                 time: comment.date.split(' | ')[1]
             };
 
-            return DumpertComment.findOneAndUpdate({videoId: this._id, commentId: comment.id}, {
+            const query = {videoId: this._id, commentId: comment.id};
+
+            return DumpertComment.findOneAndUpdate(query, {
                 videoId: this._id,
                 commentId: comment.id,
                 kudos: comment.kudos,
                 content: comment.content,
                 user: comment.user,
                 published: new Date(`20${date.year}-${date.month}-${date.day} ${date.time}:00 +0100`)
-            }, {upsert: true}).exec();
+            }, {upsert: true}).exec().then(doc => {
+
+                if(doc && doc.deleted.deleted) return;
+
+                let status = 0;
+
+                if(comment.content == '-weggejorist en opgerot-'){
+                    status = 2;
+                }
+                else if(comment.content == '-weggejorist-'){
+                    status = 1;
+                }
+
+                if(status == 0) return;
+
+                return DumpertComment.findOneAndUpdate(query, {
+                    deleted: {
+                        deleted: true,
+                        banned: status == 2,
+                        detectedAt: new Date(),
+                        originalContent: doc ? doc.content : null
+                    }
+                }).exec();
+
+
+            });
 
         });
 

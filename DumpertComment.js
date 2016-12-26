@@ -7,7 +7,13 @@ const DumpertComment = new Schema({
     kudos: Number,
     content: String,
     user: String,
-    published: Date
+    published: Date,
+    deleted: {
+        deleted: Boolean,
+        banned: Boolean,
+        detectedAt: Date,
+        originalContent: String
+    }
 });
 
 module.exports = mongoose.model('DumpertComment', DumpertComment);
