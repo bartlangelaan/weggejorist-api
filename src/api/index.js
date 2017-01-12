@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import DumpertComment from '../models/DumpertComment';
 
 const api = express();
@@ -15,7 +15,7 @@ api.get('/comments', (req, res) => {
     // /?banned=true
     // /?banned=false
     if (req.query.banned !== undefined) {
-        query['deleted.banned'] = req.query.banned ? true : false
+        query['deleted.banned'] = req.query.banned ? true : false;
     }
 
     let sort = {published: -1};
@@ -24,7 +24,7 @@ api.get('/comments', (req, res) => {
         sort = {'deleted.detectedAt': -1};
     }
 
-    DumpertComment.find(query).sort(sort).limit(200).exec().then(data => res.json(data))
+    DumpertComment.find(query).sort(sort).limit(200).exec().then(data => res.json(data));
 });
 
 export default api;

@@ -29,13 +29,13 @@ export default class Cron {
         DumpertAPI.getLatestVideos()
             .then(videos => {
                 log(`Inserting ${videos.length} videos into database..`);
-                return videos
+                return videos;
             })
             .then(this.insertVideos)
             .then(() => log('Inserted all videos into database.'))
             .catch(err => {
-                log(`Cant import latest videos into database.`);
-                console.err(err)
+                log('Cant import latest videos into database.');
+                console.error(err);
             });
 
         log('Getting 60 latest videos from database..');
@@ -47,14 +47,14 @@ export default class Cron {
             .then(videos => bluebird.map(videos, video => {
                 return DumpertAPI.getComments(video).then(comments => {
                     return bluebird.map(comments, comment => this.insertComment(comment));
-                })
+                });
             }))
             .then(() => log('Inserted all comments into database.'))
             .catch(err => {
-                log(`Cant import comments into database.`);
-                console.error(err)
+                log('Cant import comments into database.');
+                console.error(err);
             });
-        ;
+        
     }
 
     insertVideos(videos) {
@@ -65,7 +65,7 @@ export default class Cron {
 
     insertComment(comment) {
 
-        const query = {videoId: comment.videoId, commentId: comment.commentId}
+        const query = {videoId: comment.videoId, commentId: comment.commentId};
 
         return DumpertComment.findOneAndUpdate(query, comment, {upsert: true})
             .exec()

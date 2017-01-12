@@ -1,13 +1,13 @@
 import bluebird from 'bluebird';
 import xml2js from 'xml2js';
-import request from "request-promise";
+import request from 'request-promise';
 const parseXML = bluebird.promisify(xml2js.parseString);
 import xray from 'x-ray';
 import debug from 'debug';
 
 const xrayRequest = xray();
 
-const log = debug('weggejorist:dumpertAPI')
+const log = debug('weggejorist:dumpertAPI');
 
 class DumpertAPI {
 
@@ -40,7 +40,7 @@ class DumpertAPI {
                     };
 
                 });
-            })
+            });
     }
 
     /**
@@ -51,7 +51,7 @@ class DumpertAPI {
     getComments({_id, videoId, secret}) {
         const url = `https://comments.dumpert.nl/embed/${videoId}/${secret}/comments/`;
 
-        log(`Requesting ${url}`)
+        log(`Requesting ${url}`);
 
         const xrayPromise = new Promise((resolve, reject) => {
             xrayRequest(url, '.comment', [{
@@ -63,7 +63,7 @@ class DumpertAPI {
             }])((err, data) => {
                 if (err) reject(err);
                 else resolve(data);
-            })
+            });
         });
 
         return xrayPromise.then(data => {
@@ -88,7 +88,7 @@ class DumpertAPI {
                 };
 
             });
-        })
+        });
     }
 
 }
