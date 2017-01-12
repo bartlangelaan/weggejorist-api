@@ -17,13 +17,20 @@ export default class Cron {
 
     constructor() {
 
-        this.refreshVideos().then(() => {
-            setTimeout(() => this.refreshVideos(), 1 * 60 * 1000);
-        });
+        const refreshVideos = () => {
+            this.refreshVideos().then(() => {
+                setTimeout(() => refreshVideos(), 1 * 60 * 1000);
+            });
+        };
 
-        this.refreshComments().then(() => {
-            setTimeout(() => this.refreshComments(), 1 * 60 * 1000);
-        });
+        const refreshComments = () => {
+            this.refreshComments().then(() => {
+                setTimeout(() => refreshComments(), 1 * 60 * 1000);
+            });
+        };
+
+        refreshVideos();
+        refreshComments();
 
     }
 
@@ -60,7 +67,7 @@ export default class Cron {
                 log('Cant import comments into database.');
                 console.error(err);
             });
-        
+
     }
 
     insertVideos(videos) {
