@@ -17,16 +17,20 @@ export default class Cron {
 
     constructor() {
 
-        this.refresh();
+        this.refreshVideos().then(() => {
+            setTimeout(() => this.refreshVideos(), 1 * 60 * 1000);
+        });
 
-        setInterval(() => this.refresh(), .2 * 60 * 1000);
+        this.refreshComments().then(() => {
+            setTimeout(() => this.refreshComments(), 1 * 60 * 1000);
+        });
 
     }
 
 
-    refresh() {
+    refreshVideos() {
         log('Getting latest videos from Dumpert..');
-        DumpertAPI.getLatestVideos()
+        return DumpertAPI.getLatestVideos()
             .then(videos => {
                 log(`Inserting ${videos.length} videos into database..`);
                 return videos;
@@ -37,9 +41,11 @@ export default class Cron {
                 log('Cant import latest videos into database.');
                 console.error(err);
             });
+    }
 
+    refreshComments() {
         log('Getting 60 latest videos from database..');
-        DumpertVideo.find().sort({published: -1}).select('_id videoId secret').limit(60).exec()
+        return DumpertVideo.find().sort({published: -1}).select('_id videoId secret').limit(60).exec()
             .then(videos => {
                 log(`Getting comments from ${videos.length} videos`);
                 return videos;
