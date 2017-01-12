@@ -8,19 +8,19 @@ api.get('/comments', (req, res) => {
 
     // /?deleted=true
     // /?deleted=false
-    if(req.query.deleted !== undefined) {
+    if (req.query.deleted !== undefined) {
         query['deleted.deleted'] = req.query.deleted ? true : false;
     }
 
     // /?banned=true
     // /?banned=false
-    if(req.query.banned !== undefined) {
+    if (req.query.banned !== undefined) {
         query['deleted.banned'] = req.query.banned ? true : false
     }
 
     let sort = {published: -1};
 
-    if(req.query.sort == 'deleted'){
+    if (req.query.sort == 'deleted') {
         sort = {'deleted.detectedAt': -1};
     }
 
