@@ -1,4 +1,4 @@
-import api from './api';
+import Cron from './cron';
 import mongoose from 'mongoose';
 import bluebird from 'bluebird';
 
@@ -6,4 +6,4 @@ import bluebird from 'bluebird';
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/weggejorist');
 mongoose.Promise = bluebird.Promise;
 
-api.listen(process.env.PORT || 3000);
+Cron.start();

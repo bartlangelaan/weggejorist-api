@@ -17,20 +17,7 @@ export default class Cron {
 
     constructor() {
 
-        const refreshVideos = () => {
-            this.refreshVideos().then(() => {
-                setTimeout(() => refreshVideos(), 1 * 60 * 1000);
-            });
-        };
-
-        const refreshComments = () => {
-            this.refreshComments().then(() => {
-                setTimeout(() => refreshComments(), 1 * 60 * 1000);
-            });
-        };
-
-        refreshVideos();
-        refreshComments();
+        this.refreshVideos().then(() => this.refreshComments());
 
     }
 
