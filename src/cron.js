@@ -29,8 +29,8 @@ export default class Cron {
             });
         };
 
-        this.refreshVideos();
-        this.refreshComments();
+        refreshVideos();
+        refreshComments();
 
     }
 

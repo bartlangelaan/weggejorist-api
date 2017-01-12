@@ -6,6 +6,7 @@ import xray from 'x-ray';
 import debug from 'debug';
 
 const xrayRequest = xray();
+xrayRequest.timeout(10 * 1000);
 
 const log = debug('weggejorist:dumpertAPI');
 
