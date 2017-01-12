@@ -19,25 +19,42 @@ export default class Cron {
 
         this.refresh();
 
-        setInterval(this.refresh, 2 * 60 * 1000);
+        setInterval(() => this.refresh(), .2 * 60 * 1000);
 
     }
 
 
     refresh() {
-        log('Getting latest videos..');
+        log('Getting latest videos from Dumpert..');
         DumpertAPI.getLatestVideos()
-            .then(videos => {log(`Inserting ${videos.length} videos into database..`); return videos})
+            .then(videos => {
+                log(`Inserting ${videos.length} videos into database..`);
+                return videos
+            })
             .then(this.insertVideos)
-            .then(() => {log('Inserted all videos into database.'); log('Getting 60 latest videos from database..')})
-            .then(() => DumpertVideo.find().sort({published: -1}).select('_id videoId secret').limit(60).exec())
-            .then(videos => {log(`Getting comments from ${videos.length} videos`); return videos;})
+            .then(() => log('Inserted all videos into database.'))
+            .catch(err => {
+                log(`Cant import latest videos into database.`);
+                console.err(err)
+            });
+
+        log('Getting 60 latest videos from database..');
+        DumpertVideo.find().sort({published: -1}).select('_id videoId secret').limit(60).exec()
+            .then(videos => {
+                log(`Getting comments from ${videos.length} videos`);
+                return videos;
+            })
             .then(videos => bluebird.map(videos, video => {
                 return DumpertAPI.getComments(video).then(comments => {
-                    return bluebird.map(comments, this.insertComment);
+                    return bluebird.map(comments, comment => this.insertComment(comment));
                 })
             }))
-            .then(comments => log('Cron done.'));
+            .then(() => log('Inserted all comments into database.'))
+            .catch(err => {
+                log(`Cant import comments into database.`);
+                console.error(err)
+            });
+        ;
     }
 
     insertVideos(videos) {
