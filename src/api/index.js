@@ -1,7 +1,10 @@
 import express from 'express';
 import DumpertComment from '../models/DumpertComment';
+import cors from 'cors';
 
 const api = express();
+
+api.use(cors());
 
 api.get('/comments', (req, res) => {
     const query = {};
