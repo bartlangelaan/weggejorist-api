@@ -18,8 +18,17 @@ api.get('/comments', (req, res) => {
         query['deleted.banned'] = req.query.banned ? true : false;
     }
 
-    let sort = {published: -1};
+    // /?before=8282383
+    if (req.query.before) {
+        query['commentId'] = {$lt: req.query.before};
+    }
 
+    if (req.query.after) {
+        query['commentId'] = {$gt: req.query.after};
+    }
+
+    // /?sort=deleted
+    let sort = {commentId: -1};
     if (req.query.sort == 'deleted') {
         sort = {'deleted.detectedAt': -1};
     }
