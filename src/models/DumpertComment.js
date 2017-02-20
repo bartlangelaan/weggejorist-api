@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const DumpertComment = new Schema({
@@ -7,13 +8,10 @@ const DumpertComment = new Schema({
     kudos: Number,
     content: String,
     user: String,
+    newbe: Boolean,
     published: Date,
-    deleted: {
-        deleted: Boolean,
-        banned: Boolean,
-        detectedAt: Date,
-        originalContent: String
-    }
+    deleted: Boolean,
+    banned: Boolean
 });
 
 module.exports = mongoose.model('DumpertComment', DumpertComment);

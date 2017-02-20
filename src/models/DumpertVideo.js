@@ -1,13 +1,15 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 const DumpertVideo = new Schema({
     title: String,
-    videoId: Number,
-    secret: String,
-    slug: String,
+    videoId: String,
     description: String,
-    published: Date
+    published: Date,
+    views: Number,
+    lastScanned: Date,
+    commentsLastScanned: Date
 });
 
 module.exports = mongoose.model('DumpertVideo', DumpertVideo);
