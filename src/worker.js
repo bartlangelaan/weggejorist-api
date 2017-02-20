@@ -91,7 +91,7 @@ async function getCommentsForAllVideos(maxVideos) {
                         commentId: id,
                         kudos: kudos_count,
                         content,
-                        ser: author_username,
+                        user: author_username,
                         newbe: author_is_newbe,
                         published: creation_datetime,
                         deleted: !approved,
