@@ -1,3 +1,5 @@
+/*eslint no-constant-condition: "off"*/
+
 import mongoose from 'mongoose';
 import { getLatest, getComments } from 'dumpert-api';
 import debug from 'debug';
@@ -39,7 +41,7 @@ async function getAllVideos(maxPage = 99999999){
 
             await DumpertPage.findOneAndUpdate({number: page}, {number: page, lastScanned: new Date(), results: result.items.length}, {upsert:true});
 
-            log(`Inserted into DB.`);
+            log('Inserted into DB.');
 
         }
         catch (e) {
@@ -48,11 +50,10 @@ async function getAllVideos(maxPage = 99999999){
         }
         page++;
     }
-    log(`Done!`);
 }
 
 async function getCommentsForAllVideos(maxVideos) {
-    if(!maxVideos) maxVideos = await DumpertVideo.count()
+    if(!maxVideos) maxVideos = await DumpertVideo.count();
     let video = 0;
     while(video < maxVideos) {
         try {
@@ -103,16 +104,15 @@ async function getCommentsForAllVideos(maxVideos) {
             dumpertVideo.commentsLastScanned = new Date();
             await dumpertVideo.save();
 
-            log(`Inserted into DB.`);
+            log('Inserted into DB.');
 
         }
         catch (e) {
-            log(`Error inserting comments for video`);
+            log('Error inserting comments for video');
             log(e);
         }
         video++;
     }
-    log(`Done!`);
 }
 
 (async function() {
