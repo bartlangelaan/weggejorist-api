@@ -1,8 +1,7 @@
-/*eslint no-constant-condition: "off"*/
+/*eslint no-constant-condition: "off", no-console: "off"*/
 
 import mongoose from 'mongoose';
 import { getLatest, getComments } from 'dumpert-api';
-import debug from 'debug';
 import DumpertVideo from './models/DumpertVideo';
 import DumpertPage from './models/DumpertPage';
 import DumpertComment from './models/DumpertComment';
@@ -10,9 +9,6 @@ import DumpertComment from './models/DumpertComment';
 // Set up mongoose
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/weggejorist');
 mongoose.Promise = Promise;
-
-// Set up logs
-const log = debug('weggejorist:worker');
 
 async function getAllVideos(maxPage = 99999999){
     let latestReactionItems = 15;
@@ -28,7 +24,7 @@ async function getAllVideos(maxPage = 99999999){
                 throw Error(result.errors.join(' - '));
             }
 
-            log(`Got latest videos page ${page}, ${result.items.length} items returned`);
+            console.log(`Recieved ${result.items.length} items from page ${page}.`);
 
             // Insert all videos into DB
             await Promise.all(result.items.map(({id, title, description, date, stats}) =>
@@ -41,12 +37,10 @@ async function getAllVideos(maxPage = 99999999){
 
             await DumpertPage.findOneAndUpdate({number: page}, {number: page, lastScanned: new Date(), results: result.items.length}, {upsert:true});
 
-            log('Inserted into DB.');
-
         }
         catch (e) {
-            log(`Error inserting videos from page ${page}`);
-            log(e);
+            console.log(`Error inserting videos from page ${page}`);
+            console.log(e);
         }
         page++;
     }
@@ -59,8 +53,6 @@ async function getCommentsForAllVideos(maxVideos) {
         try {
 
             const dumpertVideo = await DumpertVideo.findOne().sort('-published').select('_id videoId').skip(video).exec();
-
-            log(`Getting comments for video ${dumpertVideo} (${video} / ${maxVideos})`);
 
             const result = await getComments(dumpertVideo.videoId);
 
@@ -75,12 +67,11 @@ async function getCommentsForAllVideos(maxVideos) {
 
             let comments = result.data.comments;
             comments.forEach(comment => comments.push(...comment.child_comments));
-
-            log(`Recieved ${result.data.comments.length} comments for video ${dumpertVideo}..`);
+            let numComments = comments.length;
 
             comments = comments.filter(comment => !comment.approved);
 
-            log(`.. of which ${comments.length} are removed.`);
+            console.log(`[${video} / ${maxVideos}] Recieved ${numComments} comments for video ${dumpertVideo.videoId} of which ${comments.length} are deleted.`);
 
             // Insert all comments into DB
             await Promise.all(comments.map(({approved, author_is_newbe, author_username, banned, content, creation_datetime, id, kudos_count}) =>
@@ -102,14 +93,12 @@ async function getCommentsForAllVideos(maxVideos) {
             ));
 
             dumpertVideo.commentsLastScanned = new Date();
+            dumpertVideo.comments = numComments;
             await dumpertVideo.save();
-
-            log('Inserted into DB.');
-
         }
         catch (e) {
-            log('Error inserting comments for video');
-            log(e);
+            console.log(`Error inserting comments for video ${video}.`);
+            console.log(e);
         }
         video++;
     }

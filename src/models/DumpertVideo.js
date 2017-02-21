@@ -8,6 +8,7 @@ const DumpertVideo = new Schema({
     description: String,
     published: Date,
     views: Number,
+    comments: Number,
     lastScanned: Date,
     commentsLastScanned: Date
 });
