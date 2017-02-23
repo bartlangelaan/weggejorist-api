@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import './DumpertVideo';
 
 const Schema = mongoose.Schema;
 
