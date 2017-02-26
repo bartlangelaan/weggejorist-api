@@ -13,4 +13,4 @@ const DumpertVideo = new Schema({
     commentsLastScanned: Date
 });
 
-module.exports = mongoose.model('DumpertVideo', DumpertVideo);
+export default mongoose.model('DumpertVideo', DumpertVideo);

@@ -9,10 +9,10 @@ const DumpertComment = new Schema({
     kudos: Number,
     content: String,
     user: String,
-    newbe: Boolean,
+    newbie: Boolean,
     published: Date,
     deleted: Boolean,
     banned: Boolean
 });
 
-module.exports = mongoose.model('DumpertComment', DumpertComment);
+export default mongoose.model('DumpertComment', DumpertComment);

@@ -8,4 +8,4 @@ const DumpertPage = new Schema({
     results: Number
 });
 
-module.exports = mongoose.model('DumpertPage', DumpertPage);
+export default mongoose.model('DumpertPage', DumpertPage);
