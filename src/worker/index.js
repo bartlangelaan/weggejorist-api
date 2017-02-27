@@ -76,6 +76,9 @@ mongoose.Promise = Promise;
             if(video) {
                 await importComments(video);
             }
+            else {
+                await new Promise(r => setTimeout(r, 1000));
+            }
         }
         catch(e) {
             console.log(e);
