@@ -8,7 +8,7 @@
     "start-worker": "DEBUG=weggejorist,weggejorist:* babel-watch src/worker/index.js",
     "build": "babel src -d dist",
     "serve": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 dist/index.js",
-    "serve-worker": "forever dist/worker/worker.js",
+    "serve-worker": "forever dist/worker/index.js",
     "test": "eslint \"src/**\""
   },
   "author": "",
