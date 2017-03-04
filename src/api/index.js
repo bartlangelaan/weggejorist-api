@@ -69,8 +69,8 @@ api.get('/stats', async (req, res) => {
             $group: {
                 _id: {year: {$year: '$published'}, month: {$month: '$published'}},
                 deleted: { $sum: 1 },
-                deleted_newbie: { $sum: {$cond : [ "$newbie", 1, 0 ] } },
-                deleted_banned: { $sum: {$cond : [ "$banned", 1, 0 ] } }
+                deleted_newbie: { $sum: {$cond : [ '$newbie', 1, 0 ] } },
+                deleted_banned: { $sum: {$cond : [ '$banned', 1, 0 ] } }
             },
         },
         {

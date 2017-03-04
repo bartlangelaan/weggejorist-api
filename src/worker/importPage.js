@@ -52,7 +52,7 @@ export default async function (page) {
                 await DumpertPage.findOneAndUpdate({number: page}, {number: page, lastScanned: new Date(), results: 15}, {upsert:true}).exec();
             }
             catch(e){
-                console.log(e)
+                console.log(e);
             }
         }
     }
