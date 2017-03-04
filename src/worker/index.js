@@ -72,9 +72,10 @@ mongoose.Promise = Promise;
 (async function() {
     while(true) {
         try {
-            const video = await DumpertVideo.findOne({}).sort({commentsLastScanned: 1}).exec();
-            if(video) {
-                await importComments(video);
+            const videos = await DumpertVideo.find().sort({commentsLastScanned: 1}).limit(5).exec();
+            if(videos && videos.length) {
+                await Promise.all(videos.map(video => importComments(video)));
+                console.log('queue done.');
             }
             else {
                 await new Promise(r => setTimeout(r, 1000));
@@ -94,14 +95,14 @@ mongoose.Promise = Promise;
 (async function() {
     while(true) {
         try {
-            const video = await DumpertVideo.aggregate([
+            const videos = await DumpertVideo.aggregate([
                 {$sort: {published: -1}},
                 {$limit: 100},
                 {$sort: {commentsLastScanned: 1}},
                 {$limit: 1}
             ]).exec();
-            if(video && video[0]) {
-                await importComments(video[0]);
+            if(videos && videos.length) {
+                await Promise.all(videos.map(video => importComments(video)));
             }
         }
         catch(e) {

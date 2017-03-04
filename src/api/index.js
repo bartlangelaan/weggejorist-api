@@ -1,6 +1,7 @@
 import express from 'express';
 import DumpertComment from '../models/DumpertComment';
 import DumpertVideo from '../models/DumpertVideo';
+import DumpertPage from '../models/DumpertPage';
 import cors from 'cors';
 
 const api = express();
@@ -105,8 +106,12 @@ api.get('/stats', async (req, res) => {
                 per_month: commentsPerMonth,
             },
             worker: {
+                items: {
+                    oldest_scan: (await DumpertPage.findOne({}).sort({lastScanned: 1}).exec()).lastScanned,
+                },
                 comments: {
-                    scannedVideos: await DumpertVideo.count({commentsLastScanned: {$exists: true}})
+                    oldest_scan: (await DumpertVideo.findOne({}).sort({commentsLastScanned: 1}).exec()).commentsLastScanned,
+                    scannedVideos: await DumpertVideo.count({commentsLastScanned: {$exists: true}}),
                 }
             }
         }
