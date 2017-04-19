@@ -1,14 +1,16 @@
 import express from 'express';
+import apicache from 'apicache'
 import DumpertComment from '../models/DumpertComment';
 import DumpertVideo from '../models/DumpertVideo';
 import DumpertPage from '../models/DumpertPage';
 import cors from 'cors';
 
 const api = express();
+const cache = apicache.middleware;
 
 api.use(cors());
 
-api.get('/comments', (req, res) => {
+api.get('/comments', cache('5 minutes'), (req, res) => {
     const query = {};
 
     // /?banned=true
@@ -36,7 +38,7 @@ api.get('/comments', (req, res) => {
     DumpertComment.find(query).sort(sort).limit(30).populate('videoId', 'title').exec().then(data => res.json(data));
 });
 
-api.get('/stats', async (req, res) => {
+api.get('/stats', cache('2 seconds'), async (req, res) => {
 
     const allVideos = await DumpertVideo.aggregate([
         {
