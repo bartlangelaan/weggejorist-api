@@ -33,7 +33,7 @@ api.get('/comments', (req, res) => {
     //     sort = {'deleted.detectedAt': -1};
     // }
 
-    DumpertComment.find(query).sort(sort).limit(200).populate('videoId', 'title').exec().then(data => res.json(data));
+    DumpertComment.find(query).sort(sort).limit(30).populate('videoId', 'title').exec().then(data => res.json(data));
 });
 
 api.get('/stats', async (req, res) => {
