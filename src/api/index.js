@@ -1,5 +1,5 @@
 import express from 'express';
-import apicache from 'apicache'
+import apicache from 'apicache';
 import DumpertComment from '../models/DumpertComment';
 import DumpertVideo from '../models/DumpertVideo';
 import DumpertPage from '../models/DumpertPage';
